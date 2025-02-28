@@ -4,7 +4,8 @@ import cors from "cors";
 import mysqlPool from "./config/db.js";
 import fishRoutes from "./routes/fishRoutes.js";
 import plantRoutes from "./routes/plantRoutes.js";
-import reviewRoutesRoutes from "./routes/reviewRoutes.js";
+import reviewRoutes from "./routes/reviewRoutes.js";
+import cartRoutes from "./routes/cartRoutes.js";
 
 dotenv.config();
 
@@ -23,7 +24,8 @@ app.use(express.json()); // ✅ Middleware for parsing JSON
 // ✅ Routes
 app.use("/api/v1/fish", fishRoutes);
 app.use("/api/v1/plant", plantRoutes);
-app.use("/api/v1/reviews", reviewRoutesRoutes);
+app.use("/api/v1/reviews", reviewRoutes);
+app.use("/api/v1/cart", cartRoutes);
 // ✅ Fix test route
 app.get("/test", (req, res) => {
   res.status(200).send("MySQL running");

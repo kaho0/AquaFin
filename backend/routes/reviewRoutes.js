@@ -3,17 +3,15 @@ import {
   getReviews,
   addReview,
   deleteReview,
-} from "../controllers/reviewController.js"; // Named import
+  updateReview,
+} from "../controllers/reviewController.js";
 
 const router = express.Router();
 
-// Route for fetching all reviews
 router.get("/getall", getReviews);
-
-// Route for adding a new review
 router.post("/create", addReview);
-
-// Route for deleting a review by ID
 router.delete("/:id", deleteReview);
+// Add the missing PUT route for editing
+router.put("/:id", updateReview); // You'll need to implement updateReview
 
-export default router; // Export the router
+export default router;
