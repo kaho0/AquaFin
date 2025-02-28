@@ -2,7 +2,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
 import { auth } from "./firebase.js";
 import { toast } from "react-toastify";
-import SignInwithGoogle from "./signInWIthGoogle.js";
+import SignInwithGoogle from "./signInWithGoogle.jsx";
 
 function Login() {
   const [email, setEmail] = useState("");

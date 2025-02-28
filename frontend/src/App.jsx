@@ -16,6 +16,14 @@ import { auth } from "./components/firebase";
 import Home from "./pages/Home";
 import FishList from "./pages/FishList";
 import PlantList from "./pages/PlantList";
+// You'll need to create these new components
+
+import TrustedBlogs from "./pages/Blog";
+import ContactPage from "./pages/ContactUs";
+import AboutPage from "./pages/About";
+import AquariumCart from "./Cart";
+// import About from "./pages/About";
+// import Contact from "./pages/Contact";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -30,40 +38,36 @@ function App() {
 
   return (
     <Router>
-      <div className="App">
-        <div className="auth-wrapper">
-          <div className="auth-inner">
-            <Routes>
-              <Route
-                path="/"
-                element={user ? <Navigate to="/home" /> : <Login />}
-              />
-              <Route
-                path="/login"
-                element={user ? <Navigate to="/home" /> : <Login />}
-              />
-              <Route path="/register" element={<Register />} />
-              <Route
-                path="/profile"
-                element={user ? <Profile /> : <Navigate to="/login" />}
-              />
-              <Route
-                path="/home"
-                element={user ? <Home /> : <Navigate to="/login" />}
-              />
-              <Route
-                path="/allfish"
-                element={user ? <FishList /> : <Navigate to="/login" />}
-              />
-              <Route
-                path="/allplant"
-                element={user ? <PlantList /> : <Navigate to="/login" />}
-              />
-            </Routes>
-            <ToastContainer />
-          </div>
-        </div>
-      </div>
+      <ToastContainer position="top-center" />
+      <Routes>
+        <Route path="/" element={<Home user={user} />} />
+        <Route
+          path="/login"
+          element={!user ? <Login /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/register"
+          element={!user ? <Register /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/profile"
+          element={user ? <Profile user={user} /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/allfish"
+          element={user ? <FishList user={user} /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/allplants"
+          element={user ? <PlantList user={user} /> : <Navigate to="/login" />}
+        />
+
+        {/* New routes */}
+        <Route path="/blog" element={<TrustedBlogs user={user} />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/cart" element={<AquariumCart />} />
+      </Routes>
     </Router>
   );
 }

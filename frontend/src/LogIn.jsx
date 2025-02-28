@@ -262,6 +262,7 @@ import { auth } from "./components/firebase.js";
 import { toast } from "react-toastify";
 import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
+import SignInwithGoogle from "./components/signInWithGoogle.jsx";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -314,11 +315,11 @@ const Login = () => {
         </form>
 
         {/* Google Sign In */}
-        <button style={googleButtonStyle}>
+        {/* <button style={googleButtonStyle}>
           <FcGoogle size={24} style={{ marginRight: "10px" }} /> Sign in with
           Google
-        </button>
-
+        </button> */}
+        <SignInwithGoogle></SignInwithGoogle>
         <p style={linkTextStyle}>
           Don't have an account?{" "}
           <Link to="/register" style={linkStyle}>

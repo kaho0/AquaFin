@@ -3,6 +3,8 @@ import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth, db } from "./firebase";
 import { toast } from "react-toastify";
 import { setDoc, doc } from "firebase/firestore";
+import { FcGoogle } from "react-icons/fc";
+
 function SignInwithGoogle() {
   function googleLogin() {
     const provider = new GoogleAuthProvider();
@@ -23,16 +25,33 @@ function SignInwithGoogle() {
       }
     });
   }
+
+  const googleButtonStyle = {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    padding: "12px",
+    marginTop: "10px",
+    borderRadius: "8px",
+    border: "1px solid rgba(255, 255, 255, 0.5)",
+    background: "rgba(255, 255, 255, 0.1)",
+    fontSize: "1rem",
+    fontWeight: "600",
+    color: "white",
+    cursor: "pointer",
+    transition: "all 0.3s ease",
+  };
+
   return (
     <div>
-      <p className="continue-p">--Or continue with--</p>
-      <div
-        style={{ display: "flex", justifyContent: "center", cursor: "pointer" }}
-        onClick={googleLogin}
-      >
-       <img src="/google.png" width="3%" />
-      </div>
+      {/* Google Sign In */}
+      <button style={googleButtonStyle} onClick={googleLogin}>
+        <FcGoogle size={24} style={{ marginRight: "10px" }} /> Sign in with
+        Google
+      </button>
     </div>
   );
 }
+
 export default SignInwithGoogle;
