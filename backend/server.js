@@ -6,6 +6,7 @@ import fishRoutes from "./routes/fishRoutes.js";
 import plantRoutes from "./routes/plantRoutes.js";
 import reviewRoutes from "./routes/reviewRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ app.use("/api/v1/fish", fishRoutes);
 app.use("/api/v1/plant", plantRoutes);
 app.use("/api/v1/reviews", reviewRoutes);
 app.use("/api/v1/cart", cartRoutes);
+app.use("/api/v1/orders", orderRoutes);
 // ✅ Fix test route
 app.get("/test", (req, res) => {
   res.status(200).send("MySQL running");
