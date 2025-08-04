@@ -16,7 +16,7 @@ const app = express();
 // ✅ Apply CORS before defining routes
 app.use(
   cors({
-    origin: ["https://aquafin.onrender.com"], // ✅ Localhost for development
+    origin: "*", // ✅ Localhost for development
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true, // ✅ Needed for authentication
