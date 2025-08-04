@@ -1,22 +1,3 @@
-// // src/assets/Firebase/firebase.config.js
-// import { initializeApp } from "firebase/app";
-// import { getAuth } from "firebase/auth"; // Import the auth function
-// import { getFirestore } from "firebase/firestore";
-// // Your web app's Firebase configuration
-// const firebaseConfig = {
-//   apiKey: "AIzaSyB2dtnK8mACPb0_VD4nJADKatxob213N2M",
-//   authDomain: "aquafin-99718.firebaseapp.com",
-//   projectId: "aquafin-99718",
-//   storageBucket: "aquafin-99718.firebasestorage.app",
-//   messagingSenderId: "20571758690",
-//   appId: "1:20571758690:web:a8c98ae326680211a2b13b",
-// };
-
-// const app = initializeApp(firebaseConfig);
-
-// export const auth = getAuth();
-// export const db = getFirestore(app);
-// export default app;
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";

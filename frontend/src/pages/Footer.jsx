@@ -8,10 +8,7 @@ import {
 
 const Footer = () => {
   return (
-    <footer
-      className="relative bg-cyan-800 text-white py-12 px-10 mt-10 mb-10"
-      style={{ padding: "0 10%" }}
-    >
+    <footer className="relative bg-cyan-800 text-white px-10 mt-10">
       {/* Background Image with Opacity */}
       <div
         className="absolute inset-0 bg-cover bg-center opacity-20"
@@ -30,7 +27,7 @@ const Footer = () => {
             marginBottom: "0.5rem",
           }}
         >
-          AquaWorld
+          AquaFin
         </h2>
         <p
           style={{
@@ -111,7 +108,7 @@ const Footer = () => {
             marginTop: "2rem",
           }}
         >
-          &copy; {new Date().getFullYear()} AquaWorld. All rights reserved.
+          &copy; {new Date().getFullYear()} AquaFin. All rights reserved.
         </p>
       </div>
     </footer>

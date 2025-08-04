@@ -85,10 +85,11 @@ export const createOrder = async (req, res) => {
       INSERT INTO orders 
         (user_id, ordered_products, address, order_date, total_amount, status, created_at, updated_at) 
       VALUES 
-        (?, ?, ?, ?, ?, ?, NOW(), NOW())
+        ($1, $2, $3, $4, $5, $6, NOW(), NOW())
+      RETURNING *
     `;
 
-    const [result] = await db.execute(query, [
+    const { rows } = await db.query(query, [
       user_id,
       orderedProductsJSON,
       address,
@@ -98,12 +99,17 @@ export const createOrder = async (req, res) => {
     ]);
 
     res.status(201).json({
+      success: true,
       message: "Order created successfully",
-      order_id: result.insertId,
+      data: rows[0],
     });
   } catch (error) {
     console.error("Error creating order:", error);
-    res.status(500).json({ error: "Failed to create order" });
+    res.status(500).json({
+      success: false,
+      message: "Error in Create Order API",
+      error: error.message,
+    });
   }
 };
 
@@ -115,14 +121,14 @@ export const getUserOrders = async (req, res) => {
     const query = `
       SELECT id, user_id, ordered_products, address, order_date, total_amount, status, created_at, updated_at 
       FROM orders 
-      WHERE user_id = ? 
+      WHERE user_id = $1 
       ORDER BY order_date DESC
     `;
 
-    const [orders] = await db.execute(query, [user_id]);
+    const { rows } = await db.query(query, [user_id]);
 
     // Parse JSON ordered_products for each order
-    const processedOrders = orders.map((order) => {
+    const processedOrders = rows.map((order) => {
       try {
         // Only parse if it's a string
         const parsedProducts =
@@ -162,19 +168,19 @@ export const getOrderById = async (req, res) => {
     const query = `
       SELECT id, user_id, ordered_products, address, order_date, total_amount, status, created_at, updated_at 
       FROM orders 
-      WHERE id = ?
+      WHERE id = $1
     `;
 
-    const [orders] = await db.execute(query, [order_id]);
+    const { rows } = await db.query(query, [order_id]);
 
-    if (orders.length === 0) {
+    if (rows.length === 0) {
       return res.status(404).json({ error: "Order not found" });
     }
 
     // Parse the JSON ordered_products
     const order = {
-      ...orders[0],
-      ordered_products: JSON.parse(orders[0].ordered_products),
+      ...rows[0],
+      ordered_products: JSON.parse(rows[0].ordered_products),
     };
 
     res.json(order);
@@ -196,17 +202,22 @@ export const updateOrderStatus = async (req, res) => {
 
     const query = `
       UPDATE orders 
-      SET status = ?, updated_at = NOW() 
-      WHERE id = ?
+      SET status = $1, updated_at = NOW() 
+      WHERE id = $2
+      RETURNING *
     `;
 
-    const [result] = await db.execute(query, [status, order_id]);
+    const { rows } = await db.query(query, [status, order_id]);
 
-    if (result.affectedRows === 0) {
+    if (rows.length === 0) {
       return res.status(404).json({ error: "Order not found" });
     }
 
-    res.json({ message: "Order status updated successfully" });
+    res.json({
+      success: true,
+      message: "Order status updated successfully",
+      data: rows[0],
+    });
   } catch (error) {
     console.error("Error updating order status:", error);
     res.status(500).json({ error: "Failed to update order status" });
@@ -218,11 +229,11 @@ export const deleteOrder = async (req, res) => {
   try {
     const { order_id } = req.params;
 
-    const query = `DELETE FROM orders WHERE id = ?`;
+    const query = `DELETE FROM orders WHERE id = $1`;
 
-    const [result] = await db.execute(query, [order_id]);
+    const { rows } = await db.query(query, [order_id]);
 
-    if (result.affectedRows === 0) {
+    if (rows.length === 0) {
       return res.status(404).json({ error: "Order not found" });
     }
 
@@ -245,19 +256,19 @@ export const getOrderAnalytics = async (req, res) => {
         SUM(total_amount) as total_spent,
         AVG(total_amount) as average_order_value
       FROM orders
-      WHERE user_id = ?
+      WHERE user_id = $1
     `;
 
     // Query to get orders by status
     const statusQuery = `
       SELECT status, COUNT(*) as count
       FROM orders
-      WHERE user_id = ?
+      WHERE user_id = $1
       GROUP BY status
     `;
 
-    const [analytics] = await db.execute(analyticsQuery, [user_id]);
-    const [statusCounts] = await db.execute(statusQuery, [user_id]);
+    const { rows: analytics } = await db.query(analyticsQuery, [user_id]);
+    const { rows: statusCounts } = await db.query(statusQuery, [user_id]);
 
     res.json({
       analytics: analytics[0],
@@ -266,5 +277,118 @@ export const getOrderAnalytics = async (req, res) => {
   } catch (error) {
     console.error("Error fetching order analytics:", error);
     res.status(500).json({ error: "Failed to fetch order analytics" });
+  }
+};
+
+// Get all orders (admin)
+export const getAllOrders = async (req, res) => {
+  try {
+    const query = `
+      SELECT id, user_id, ordered_products, address, order_date, total_amount, status, created_at, updated_at 
+      FROM orders 
+      ORDER BY order_date DESC
+    `;
+    const { rows } = await db.query(query);
+    // Parse JSON ordered_products for each order
+    const processedOrders = rows.map((order) => {
+      try {
+        const parsedProducts =
+          typeof order.ordered_products === "string"
+            ? JSON.parse(order.ordered_products)
+            : order.ordered_products;
+        return {
+          ...order,
+          ordered_products: parsedProducts,
+        };
+      } catch (error) {
+        return {
+          ...order,
+          ordered_products: [],
+        };
+      }
+    });
+    res.json(processedOrders);
+  } catch (error) {
+    console.error("Error fetching all orders:", error);
+    res.status(500).json({ error: "Failed to fetch all orders" });
+  }
+};
+
+// Get admin dashboard analytics
+export const getAdminAnalytics = async (req, res) => {
+  try {
+    // Get total orders and sales
+    const totalQuery = `
+      SELECT 
+        COUNT(*) as total_orders,
+        SUM(total_amount) as total_sales,
+        AVG(total_amount) as average_order_value
+      FROM orders
+    `;
+
+    // Get orders by status
+    const statusQuery = `
+      SELECT status, COUNT(*) as count
+      FROM orders
+      GROUP BY status
+    `;
+
+    // Get daily sales for the last 30 days
+    const dailySalesQuery = `
+      SELECT 
+        DATE(order_date) as date,
+        COUNT(*) as orders,
+        SUM(total_amount) as revenue
+      FROM orders
+      WHERE order_date >= NOW() - INTERVAL '30 days'
+      GROUP BY DATE(order_date)
+      ORDER BY date
+    `;
+
+    // Get top selling products
+    const topProductsQuery = `
+      SELECT 
+        product_name,
+        SUM(quantity) as total_quantity,
+        SUM(price * quantity) as total_revenue
+      FROM (
+        SELECT 
+          jsonb_array_elements(ordered_products::jsonb) as product
+        FROM orders
+      ) as products,
+      jsonb_to_record(product) as x(product_name text, quantity int, price numeric)
+      GROUP BY product_name
+      ORDER BY total_quantity DESC
+      LIMIT 10
+    `;
+
+    const [totalResult, statusResult, dailySalesResult, topProductsResult] = await Promise.all([
+      db.query(totalQuery),
+      db.query(statusQuery),
+      db.query(dailySalesQuery),
+      db.query(topProductsQuery)
+    ]);
+
+    res.json({
+      totalStats: totalResult.rows[0],
+      statusCounts: statusResult.rows,
+      dailySales: dailySalesResult.rows,
+      topProducts: topProductsResult.rows
+    });
+  } catch (error) {
+    console.error("Error fetching admin analytics:", error);
+    res.status(500).json({ error: "Failed to fetch admin analytics" });
+  }
+};
+
+// Get low stock alerts
+export const getLowStockAlerts = async (req, res) => {
+  try {
+    // This would need to be implemented based on your product schema
+    // For now, returning empty array as placeholder
+    res.json([]);
+  } catch (error) {
+    console.error("Error fetching low stock alerts:", error);
+    res.status(500).json({ error: "Failed to fetch low stock alerts" });
   }
 };

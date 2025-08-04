@@ -6,6 +6,9 @@ import {
   updateOrderStatus,
   deleteOrder,
   getOrderAnalytics,
+  getAllOrders,
+  getAdminAnalytics,
+  getLowStockAlerts,
 } from "../controllers/orderController.js";
 
 const router = express.Router();
@@ -26,5 +29,12 @@ router.delete("/:order_id", deleteOrder);
 
 // Get order analytics
 router.get("/analytics/:user_id", getOrderAnalytics);
+
+// Add admin route to get all orders
+router.get("/admin/all", getAllOrders);
+
+// Add admin analytics routes
+router.get("/admin/analytics", getAdminAnalytics);
+router.get("/admin/low-stock", getLowStockAlerts);
 
 export default router;

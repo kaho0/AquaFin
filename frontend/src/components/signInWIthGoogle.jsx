@@ -4,8 +4,11 @@ import { auth, db } from "./firebase";
 import { toast } from "react-toastify";
 import { setDoc, doc } from "firebase/firestore";
 import { FcGoogle } from "react-icons/fc";
+import { useNavigate } from "react-router-dom";
 
 function SignInwithGoogle() {
+  const navigate = useNavigate();
+  
   function googleLogin() {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider).then(async (result) => {
@@ -21,7 +24,7 @@ function SignInwithGoogle() {
         toast.success("User logged in Successfully", {
           position: "top-center",
         });
-        window.location.href = "/profile";
+        navigate("/profile");
       }
     });
   }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../components/firebase.js";
 
@@ -6,7 +6,15 @@ const NavBar = () => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
-  const user = auth.currentUser;
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setUser(user);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -41,9 +49,22 @@ const NavBar = () => {
     <nav className="flex flex-wrap justify-between items-center p-4 mb-6">
       {/* Logo */}
       <div className="text-white text-2xl font-bold flex items-center gap-4 ml-4">
-        <img src="/logo.png" alt="Logo" className="h-12 w-12 md:h-16 md:w-16" />
-        <span>AquaStore</span>
+        <img
+          src="/white.png"
+          alt="Logo"
+          className="h-auto w-auto max-h-30 max-w-30 object-contain"
+        />
       </div>
+
+      {/* Admin Panel Link (visible only to admin) */}
+      {user && user.email === "kahonbintezaman@gmail.com" && (
+        <button
+          className="text-white bg-teal-700 px-4 py-2 rounded-lg font-semibold hover:bg-teal-800 transition-colors mr-4"
+          onClick={() => navigate("/admin")}
+        >
+          Admin Panel
+        </button>
+      )}
 
       {/* Hamburger Menu Button for Mobile */}
       <button
@@ -73,7 +94,7 @@ const NavBar = () => {
       >
         {[
           { name: "Home", path: "/" },
-          { name: "Shop", path: "/shop" },
+
           { name: "Blog", path: "/blog" },
           { name: "About", path: "/about" },
           { name: "Contact", path: "/contact" },

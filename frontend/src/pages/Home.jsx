@@ -1,282 +1,3 @@
-// import React from "react";
-// import { useEffect, useState } from "react";
-// import { useNavigate } from "react-router-dom";
-// import { auth } from "../components/firebase.js";
-// import fish1 from "/s1.jpg";
-// import fish2 from "/s2.jpg";
-// import fish3 from "/s3.jpg";
-// import seahorse from "/rec1.png";
-// import fish4 from "/rec2.png";
-// import turtle from "/rec3.png";
-// import background from "/home.png";
-// import HeroSection from "./WhatWeDo";
-// import Service from "./Services";
-// import Footer from "./Footer";
-// import Review from "./Review";
-// import NavBar from "./NavBar.jsx"; // Import the NavBar component
-
-// const Home = () => {
-//   const navigate = useNavigate();
-//   const [fishList, setFishList] = useState([]);
-//   const [plantList, setPlantList] = useState([]);
-
-//   useEffect(() => {
-//     const fetchFishDetails = async () => {
-//       try {
-//         const response = await fetch(
-//           "http://localhost:4000/api/v1/fish/getall"
-//         );
-//         if (!response.ok)
-//           throw new Error(`HTTP Error! Status: ${response.status}`);
-//         const result = await response.json();
-//         setFishList(result.data);
-//       } catch (error) {
-//         console.error("Error fetching fish details:", error.message);
-//       }
-//     };
-
-//     const fetchPlantDetails = async () => {
-//       try {
-//         const response = await fetch(
-//           "http://localhost:4000/api/v1/plant/getall"
-//         );
-//         if (!response.ok)
-//           throw new Error(`HTTP Error! Status: ${response.status}`);
-//         const result = await response.json();
-//         setPlantList(result.data);
-//       } catch (error) {
-//         console.error("Error fetching plant details:", error.message);
-//       }
-//     };
-
-//     fetchFishDetails();
-//     fetchPlantDetails();
-//   }, []);
-
-//   const displayedFish = fishList.slice(0, 3);
-//   const displayedPlants = plantList.slice(0, 3);
-
-//   return (
-//     <div className="min-h-screen w-screen bg-cyan-600 text-white font-[Raleway]">
-//       {/* Background Image */}
-//       <div
-//         className="absolute inset-0 opacity-20 bg-cover bg-center"
-//         style={{ backgroundImage: `url(${background})` }}
-//       ></div>
-
-//       <div className="relative mx-auto px-4 md:px-13 py-1">
-//         {/* NavBar Component */}
-//         <NavBar />
-
-//         {/* Hero Section */}
-//         <div className="mt-4 flex flex-col md:flex-row justify-between items-center">
-//           <div className="max-w-xl lg:pl-16">
-//             <h1
-//               style={{
-//                 fontSize: "2.2rem",
-//                 fontWeight: "bold",
-//                 marginBottom: "1rem",
-//               }}
-//             >
-//               Discover the Wonders{" "}
-//               <span className="text-[#CD7F32]">Colorful Fish</span> in the Ocean
-//             </h1>
-//             <p className="mt-6 text-lg text-cyan-50 font-[Raleway]">
-//               Know about their habitats, behaviors, and how to appreciate their
-//               role in the ocean&apos;s delicate ecosystem.
-//             </p>
-//             <button
-//               style={{
-//                 backgroundColor: "#CD7F32",
-//                 color: "white",
-//                 padding: "12px 22px",
-//                 fontSize: "1rem",
-//                 fontWeight: "600",
-//                 borderRadius: "30px",
-//                 marginTop: "1rem",
-//                 transition:
-//                   "background-color 0.3s ease-in-out, color 0.3s ease-in-out",
-//                 boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-//                 border: "none",
-//                 cursor: "pointer",
-//               }}
-//               onMouseEnter={(e) => {
-//                 e.target.style.backgroundColor = "#A67C52";
-//               }}
-//               onMouseLeave={(e) => {
-//                 e.target.style.backgroundColor = "#CD7F32";
-//               }}
-//               onClick={() => navigate("/more")}
-//             >
-//               Explore Now
-//             </button>
-
-//             {/* Fish Gallery */}
-//             <div className="mt-16">
-//               <p className="text-lg mb-4 font-[Raleway]">Aquarium Fish</p>
-//               <div className="flex space-x-4">
-//                 {[fish1, fish2, fish3].map((fish, index) => (
-//                   <img
-//                     key={index}
-//                     src={fish}
-//                     alt={`Fish ${index + 1}`}
-//                     className="w-24 h-24 rounded-md border border-gray-300 hover:scale-105 transition-transform cursor-pointer"
-//                   />
-//                 ))}
-//               </div>
-//             </div>
-//           </div>
-
-//           {/* Side Images */}
-//           <div className="relative flex mt-8 md:mt-0 hidden md:flex">
-//             <img src={seahorse} alt="Seahorse" className="-mr-10" />
-//             <img src={fish4} alt="Colorful Fish" className="-mr-10" />
-//             <img src={turtle} alt="Sea Turtle" />
-//           </div>
-//         </div>
-//       </div>
-
-//       {/* Fish Cards Section */}
-//       <div className="mt-10 px-16 py-12">
-//         <h2
-//           style={{
-//             fontSize: "2rem",
-//             fontWeight: 900,
-//             marginBottom: "2.5rem",
-//             paddingBottom: "1.25rem",
-//             color: "#DCD9D1",
-//             textAlign: "center",
-//           }}
-//         >
-//           Featured Fish
-//         </h2>
-//         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
-//           {displayedFish.map((fish) => (
-//             <div
-//               key={fish.id}
-//               className="bg-[#345b6f] text-[#DCD9D1] rounded-lg shadow-lg overflow-hidden transform transition-transform hover:scale-105"
-//               style={{
-//                 boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
-//                 transition: "all 0.3s ease",
-//                 animation: "fadeInUp 0.5s ease-in",
-//               }}
-//             >
-//               <img
-//                 src={fish.image_url}
-//                 alt={fish.name}
-//                 className="w-full h-48 object-cover hover:opacity-90"
-//                 style={{
-//                   transition: "all 0.3s ease",
-//                 }}
-//               />
-//               <div className="p-6">
-//                 <h3 className="text-xl font-semibold font-[Raleway] mb-2">
-//                   {fish.name}
-//                 </h3>
-//                 <p className="text-lg text-[#b2a190] font-bold">
-//                   ৳{Number(fish.price).toFixed(2)}
-//                 </p>
-//               </div>
-//             </div>
-//           ))}
-
-//           <div
-//             onClick={() => navigate("/allfish")}
-//             className="bg-[#b2a190] text-[#DCD9D1] rounded-lg shadow-lg overflow-hidden transform transition-transform hover:scale-105 cursor-pointer flex items-center justify-center"
-//             style={{
-//               boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
-//               transition: "all 0.3s ease",
-//               animation: "fadeInUp 0.5s ease-in",
-//             }}
-//           >
-//             <div className="text-center p-6">
-//               <h3 className="text-2xl text-white font-semibold font-[Raleway] mb-3">
-//                 View More Fish
-//               </h3>
-//               <p className="text-gray-200 mt-2 font-medium">
-//                 Explore our collection {">"}
-//                 {">"}
-//               </p>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//       <HeroSection />
-//       {/* Featured Plants Section */}
-//       <div className="space-y-20">
-//         <div className="mt-5 px-16 py-10">
-//           <h2
-//             style={{
-//               fontSize: "2rem",
-//               fontWeight: 800,
-//               paddingBottom: "2rem",
-//               color: "#DCD9D1",
-//               textAlign: "center",
-//             }}
-//           >
-//             Featured Plants
-//           </h2>
-//           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
-//             {displayedPlants.map((plant) => (
-//               <div
-//                 key={plant.id}
-//                 className="bg-[#345B6F] text-[#DCD9D1] rounded-lg shadow-lg overflow-hidden transform transition-transform hover:scale-105"
-//                 style={{
-//                   boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
-//                   transition: "all 0.3s ease",
-//                   animation: "fadeInUp 0.5s ease-in",
-//                 }}
-//               >
-//                 <img
-//                   src={plant.image_url}
-//                   alt={plant.name}
-//                   className="w-full h-48 object-cover hover:opacity-90"
-//                   style={{
-//                     transition: "all 0.3s ease",
-//                   }}
-//                 />
-//                 <div className="p-6">
-//                   <h3 className="text-xl font-semibold font-[Raleway] mb-2">
-//                     {plant.name}
-//                   </h3>
-//                   <p className="text-lg text-[#C7A64F] font-bold">
-//                     ৳{Number(plant.price).toFixed(2)}
-//                   </p>
-//                 </div>
-//               </div>
-//             ))}
-
-//             <div
-//               onClick={() => navigate("/allplants")}
-//               className="bg-[#a7a436] text-white rounded-lg shadow-lg overflow-hidden transform transition-transform hover:scale-105 cursor-pointer flex items-center justify-center"
-//               style={{
-//                 boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
-//                 transition: "all 0.3s ease",
-//                 animation: "fadeInUp 0.5s ease-in",
-//               }}
-//             >
-//               <div className="text-center p-6">
-//                 <h3 className="text-2xl font-semibold font-[Raleway] mb-3">
-//                   View More Plants
-//                 </h3>
-//                 <p className="text-gray-200 mt-2 font-medium">
-//                   Explore our collection {">"}
-//                   {">"}
-//                 </p>
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-
-//         <Service />
-//         <Review />
-//       </div>
-//       <Footer />
-//     </div>
-//   );
-// };
-
-// export default Home;
 import React from "react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -305,8 +26,12 @@ const Home = () => {
       setIsLoading(true);
       try {
         const [fishResponse, plantResponse] = await Promise.all([
-          fetch("http://localhost:4000/api/v1/fish/getall"),
-          fetch("http://localhost:4000/api/v1/plant/getall"),
+          fetch(
+        "http://localhost:4000/api/v1/fish/getall"
+          ),
+          fetch(
+        "http://localhost:4000/api/v1/plant/getall"
+          ),
         ]);
 
         if (!fishResponse.ok)
@@ -443,9 +168,9 @@ const Home = () => {
       </div>
 
       {/* Fish Cards Section with improved styling and loading state */}
-      <div className="mt-16 px-4 sm:px-8 md:px-16 py-12 relative z-10">
-        <h2 className="text-3xl md:text-4xl font-black mb-12 pb-4 text-[#DCD9D1] text-center relative after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-24 after:h-1 after:bg-[#CD7F32]">
-          Featured Fish
+      <div className="mt-8 px-4 sm:px-8 md:px-16 py-12 relative z-10">
+        <h2 className="text-3xl md:text-4xl font-black mb-12 pb-4 text-[#DCD9D1] text-center relative after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-24 after:h-1 after:bg-[#CD7F32] m-4">
+          Get Your Fish
         </h2>
 
         {isLoading ? (
@@ -524,7 +249,7 @@ const Home = () => {
                   View More Fish
                 </h3>
                 <p className="text-gray-100 font-medium flex items-center">
-                  Explore our collection
+                  & Get Your Fish
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-4 w-4 ml-1"
@@ -554,8 +279,8 @@ const Home = () => {
       {/* Featured Plants Section with enhanced styling */}
       <div className="space-y-20 relative z-10">
         <div className="px-4 sm:px-8 md:px-16 py-12">
-          <h2 className="text-3xl md:text-4xl font-black mb-12 pb-4 text-[#DCD9D1] text-center relative after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-24 after:h-1 after:bg-[#a7a436]">
-            Featured Plants
+          <h2 className="text-3xl md:text-4xl font-black mb-12 pb-4 text-[#DCD9D1] text-center relative after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-24 after:h-1 after:bg-[#a7a436] m-4">
+            Get Your Plants
           </h2>
 
           {isLoading ? (
@@ -634,7 +359,7 @@ const Home = () => {
                     View More Plants
                   </h3>
                   <p className="text-gray-100 font-medium flex items-center">
-                    Explore our collection
+                    &Get Your Plants
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="h-4 w-4 ml-1"
@@ -671,7 +396,7 @@ const Home = () => {
       </div>
 
       {/* CSS Animations */}
-      <style jsx>{`
+      <style>{`
         @keyframes fadeInUp {
           from {
             opacity: 0;

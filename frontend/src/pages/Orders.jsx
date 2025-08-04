@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { FiPhone } from "react-icons/fi";
 
 const Orders = () => {
   const [order, setOrder] = useState(null);
@@ -16,7 +17,7 @@ const Orders = () => {
         if (orderId) {
           // Fetch specific order details
           const response = await fetch(
-            `http://localhost:4000/api/v1/orders/${orderId}`
+      `http://localhost:4000/api/v1/orders/${orderId}`
           );
 
           if (!response.ok) {
@@ -130,14 +131,24 @@ const Orders = () => {
           <h2 className="text-xl font-semibold">Shipping Address</h2>
         </div>
         <div className="p-4">
-          {/* Handle both camelCase and snake_case field names */}
-          <p>{order.address?.street || order.street}</p>
-          <p>
-            {order.address?.city || order.city},{" "}
-            {order.address?.state || order.state}{" "}
-            {order.address?.zipCode || order.zip_code}
-          </p>
-          <p>{order.address?.country || order.country}</p>
+          {/* Parse address string to extract components */}
+          {(() => {
+            const addressStr = order.address || '';
+            const phoneMatch = addressStr.match(/\| Phone: (.+)$/);
+            const phoneNumber = phoneMatch ? phoneMatch[1] : '';
+            const addressWithoutPhone = addressStr.replace(/\| Phone: .+$/, '').trim();
+            
+            return (
+              <>
+                <p>{addressWithoutPhone}</p>
+                {phoneNumber && (
+                  <p className="mt-2 text-sm text-gray-600">
+                    <FiPhone className="inline mr-1" /> {phoneNumber}
+                  </p>
+                )}
+              </>
+            );
+          })()}
         </div>
       </div>
 

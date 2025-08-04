@@ -1,14 +1,14 @@
-import mysql from "mysql2/promise";
+import pkg from 'pg';
+const { Pool } = pkg;
 import dotenv from "dotenv";
 
 dotenv.config();
-const mysqlPool = mysql.createPool({
-  host: "localhost",
-  user: "root",
-  password: "Kahoo_z2003BINTE",
-  database: "fish_db",
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
-export default mysqlPool;
+
+export default pool;

@@ -10,10 +10,13 @@ export const registerUser = async (req, res) => {
 
   try {
     const sql =
-      "INSERT INTO users (uid, email, firstName, photo) VALUES (?, ?, ?, ?)";
-    await db.execute(sql, [uid, email, firstName, photo]);
+      "INSERT INTO users (uid, email, firstName, photo) VALUES ($1, $2, $3, $4) RETURNING *";
+    const { rows } = await db.query(sql, [uid, email, firstName, photo]);
 
-    res.status(201).json({ message: "User registered successfully" });
+    res.status(201).json({ 
+      message: "User registered successfully",
+      data: rows[0]
+    });
   } catch (error) {
     console.error("Error registering user:", error);
     res.status(500).json({ message: "Internal server error" });
@@ -25,13 +28,13 @@ export const getUserById = async (req, res) => {
   const { uid } = req.params;
 
   try {
-    const [user] = await db.execute("SELECT * FROM users WHERE uid = ?", [uid]);
+    const { rows } = await db.query("SELECT * FROM users WHERE uid = $1", [uid]);
 
-    if (user.length === 0) {
+    if (rows.length === 0) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.json(user[0]);
+    res.json(rows[0]);
   } catch (error) {
     console.error("Error fetching user:", error);
     res.status(500).json({ message: "Internal server error" });

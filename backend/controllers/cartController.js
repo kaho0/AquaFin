@@ -4,35 +4,47 @@ export const addToCart = async (req, res) => {
   try {
     const { user_id, product_id, category, quantity } = req.body;
 
+    console.log("📌 Received cart request:", req.body);
+
     if (!user_id || !product_id || !category || !quantity) {
+      console.error("❌ Missing required fields:", { user_id, product_id, category, quantity });
       return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    // Validate data types
+    if (typeof user_id !== 'string' || typeof product_id !== 'number' || typeof category !== 'string' || typeof quantity !== 'number') {
+      console.error("❌ Invalid data types:", { user_id, product_id, category, quantity });
+      return res.status(400).json({ error: "Invalid data types" });
     }
 
     console.log("📌 Inserting into cart:", req.body); // Debugging log
 
     const sql = `
       INSERT INTO cart (user_id, product_id, category, quantity)
-      VALUES (?, ?, ?, ?)
-      ON DUPLICATE KEY UPDATE quantity = quantity + VALUES(quantity)
+      VALUES ($1, $2, $3, $4)
+      ON CONFLICT (user_id, product_id, category) 
+      DO UPDATE SET quantity = cart.quantity + EXCLUDED.quantity
     `;
 
-    const [result] = await db.query(sql, [
+    const result = await db.query(sql, [
       user_id,
       product_id,
       category,
       quantity,
     ]);
 
-    console.log("✅ MySQL Query Result:", result); // Log MySQL response
+    console.log("✅ PostgreSQL Query Result:", result); // Log PostgreSQL response
 
-    if (result.affectedRows > 0) {
-      return res.status(201).json({ message: "Added to cart successfully" });
-    } else {
-      return res.status(500).json({ error: "Failed to insert data" });
-    }
+    // For INSERT ... ON CONFLICT ... DO UPDATE, the operation is successful even if no rows are returned
+    return res.status(201).json({ message: "Added to cart successfully" });
   } catch (error) {
-    console.error("❌ MySQL Error:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error("❌ PostgreSQL Error:", error);
+    console.error("❌ Error details:", {
+      message: error.message,
+      code: error.code,
+      detail: error.detail
+    });
+    res.status(500).json({ error: "Internal Server Error", details: error.message });
   }
 };
 
@@ -54,22 +66,22 @@ export const getCartItems = async (req, res) => {
       FROM cart c
       LEFT JOIN fishes f ON c.product_id = f.id AND c.category = 'fish'
       LEFT JOIN plants p ON c.product_id = p.id AND c.category = 'plant'
-      WHERE c.user_id = ?`;
+      WHERE c.user_id = $1`;
 
     console.log("🔍 Running query:", query, [user_id]);
 
     // Convert to async/await
-    const [result] = await db.query(query, [user_id]);
+    const { rows } = await db.query(query, [user_id]);
 
-    console.log("✅ Raw query result:", result);
+    console.log("✅ Raw query result:", rows);
 
-    if (!result.length) {
+    if (!rows.length) {
       console.warn("⚠️ No items found in cart for user:", user_id);
       return res.status(404).json({ message: "No items in cart." });
     }
 
     // Ensure all fields are JSON-safe
-    const safeResult = result.map((item) => ({
+    const safeResult = rows.map((item) => ({
       id: item.id,
       product_id: item.product_id, // Include product_id
       category: item.category,
@@ -83,7 +95,7 @@ export const getCartItems = async (req, res) => {
     res.status(200).json(safeResult);
     console.log("🎯 Response sent successfully!");
   } catch (error) {
-    console.error("❌ MySQL Error:", error);
+    console.error("❌ PostgreSQL Error:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
@@ -99,8 +111,8 @@ export const updateCartQuantity = async (req, res) => {
 
     const updateQuery = `
       UPDATE cart
-      SET quantity = ?
-      WHERE user_id = ? AND product_id = ? AND category = ?`;
+      SET quantity = $1
+      WHERE user_id = $2 AND product_id = $3 AND category = $4`;
 
     console.log("🔍 Running query:", updateQuery, [
       quantity,
@@ -108,14 +120,14 @@ export const updateCartQuantity = async (req, res) => {
       product_id,
       category,
     ]);
-    const [result] = await db.query(updateQuery, [
+    const { rows } = await db.query(updateQuery, [
       quantity,
       user_id,
       product_id,
       category,
     ]);
 
-    if (result.affectedRows === 0) {
+    if (rows.length === 0) {
       console.warn("⚠️ No cart item found to update for user:", user_id);
       return res.status(404).json({ message: "Cart item not found." });
     }
@@ -129,12 +141,12 @@ export const updateCartQuantity = async (req, res) => {
       FROM cart c
       LEFT JOIN fishes f ON c.product_id = f.id AND c.category = 'fish'
       LEFT JOIN plants p ON c.product_id = p.id AND c.category = 'plant'
-      WHERE c.user_id = ?`;
+      WHERE c.user_id = $1`;
 
     console.log("🔍 Fetching updated cart items with query:", fetchQuery, [
       user_id,
     ]);
-    const [updatedCart] = await db.query(fetchQuery, [user_id]);
+    const { rows: updatedCart } = await db.query(fetchQuery, [user_id]);
 
     console.log("✅ Updated cart items:", updatedCart);
 
@@ -169,14 +181,14 @@ export const removeFromCart = async (req, res) => {
       return res.status(400).json({ error: "Missing required fields." });
     }
 
-    const deleteQuery = `DELETE FROM cart WHERE user_id = ? AND product_id = ? AND category = ?`;
-    const [result] = await db.query(deleteQuery, [
+    const deleteQuery = `DELETE FROM cart WHERE user_id = $1 AND product_id = $2 AND category = $3`;
+    const { rows } = await db.query(deleteQuery, [
       user_id,
       product_id,
       category,
     ]);
 
-    console.log("✅ Item removed from cart!", result);
+    console.log("✅ Item removed from cart!", rows);
     res.status(200).json({ message: "Item removed from cart!" });
   } catch (error) {
     console.error("🛑 DB Error (remove cart item):", error);
@@ -193,10 +205,10 @@ export const clearCart = async (req, res) => {
       return res.status(400).json({ error: "User ID is required." });
     }
 
-    const deleteQuery = `DELETE FROM cart WHERE user_id = ?`;
-    const [result] = await db.query(deleteQuery, [user_id]);
+    const deleteQuery = `DELETE FROM cart WHERE user_id = $1`;
+    const { rows } = await db.query(deleteQuery, [user_id]);
 
-    console.log("✅ Cart cleared for user!", result);
+    console.log("✅ Cart cleared for user!", rows);
     res.status(200).json({ message: "Cart cleared successfully!" });
   } catch (error) {
     console.error("🛑 DB Error (clear cart):", error);

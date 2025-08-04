@@ -26,7 +26,9 @@ function CartComponent() {
   const fetchCartItems = async (uid) => {
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:4000/api/v1/cart/${uid}`);
+      const response = await fetch(
+      `http://localhost:4000/api/v1/cart/${uid}`
+      );
 
       if (!response.ok) throw new Error("Failed to fetch cart items");
 
@@ -50,17 +52,20 @@ function CartComponent() {
     if (newQuantity < 1) return;
 
     try {
-      const response = await fetch("http://localhost:4000/api/v1/cart/update", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          user_id: userId,
-          item_id: itemId,
-          quantity: newQuantity,
-        }),
-      });
+      const response = await fetch(
+      "http://localhost:4000/api/v1/cart/update",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            user_id: userId,
+            item_id: itemId,
+            quantity: newQuantity,
+          }),
+        }
+      );
 
       if (!response.ok) throw new Error("Failed to update cart");
 
@@ -79,16 +84,19 @@ function CartComponent() {
 
   const removeFromCart = async (itemId) => {
     try {
-      const response = await fetch("http://localhost:4000/api/v1/cart/remove", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          user_id: userId,
-          item_id: itemId,
-        }),
-      });
+      const response = await fetch(
+      "http://localhost:4000/api/v1/cart/remove",
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            user_id: userId,
+            item_id: itemId,
+          }),
+        }
+      );
 
       if (!response.ok) throw new Error("Failed to remove item from cart");
 
@@ -126,7 +134,7 @@ function CartComponent() {
       }).then(async (result) => {
         if (result.isConfirmed) {
           const response = await fetch(
-            "http://localhost:4000/api/v1/cart/clear",
+      "http://localhost:4000/api/v1/cart/clear",
             {
               method: "DELETE",
               headers: {

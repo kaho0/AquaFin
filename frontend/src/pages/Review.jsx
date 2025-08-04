@@ -43,7 +43,9 @@ const Review = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get("http://localhost:4000/api/v1/reviews/getall")
+      .get(
+        "http://localhost:4000/api/v1/reviews/getall"
+      )
       .then((response) => {
         // Sort reviews by date (newest first)
         const sortedReviews = response.data.sort((a, b) => {
@@ -91,7 +93,7 @@ const Review = () => {
         }
 
         const response = await axios.put(
-          `http://localhost:4000/api/v1/reviews/${editReview.id}`,
+        `http://localhost:4000/api/v1/reviews/${editReview.id}`,
           reviewData
         );
 
@@ -102,7 +104,7 @@ const Review = () => {
         setIsEditing(false);
       } else {
         const response = await axios.post(
-          "http://localhost:4000/api/v1/reviews/create",
+        "http://localhost:4000/api/v1/reviews/create",
           reviewData
         );
 
@@ -160,7 +162,9 @@ const Review = () => {
       setLoading(true);
 
       try {
-        await axios.delete(`http://localhost:4000/api/v1/reviews/${reviewId}`);
+        await axios.delete(
+        `http://localhost:4000/api/v1/reviews/${reviewId}`
+        );
         setReviews(reviews.filter((r) => r.id !== reviewId));
         setSuccess("Review deleted successfully!");
 

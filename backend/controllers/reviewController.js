@@ -3,14 +3,13 @@ import db from "../config/db.js"; // Assuming you have a database connection fil
 // Get all reviews
 export const getReviews = async (req, res) => {
   try {
-    const [reviews] = await db.execute("SELECT * FROM review");
-    res.status(200).json(reviews);
+    const { rows } = await db.query("SELECT * FROM review");
+    res.status(200).json(rows);
   } catch (error) {
     res.status(500).json({ message: "Error fetching reviews", error });
   }
 };
 
-// Add a new review
 // Add a new review
 export const addReview = async (req, res) => {
   const { userId, name, review_text } = req.body;
@@ -21,15 +20,10 @@ export const addReview = async (req, res) => {
 
   try {
     const query =
-      "INSERT INTO review (userId, name, review_text) VALUES (?, ?, ?)";
-    const [result] = await db.execute(query, [userId, name, review_text]);
+      "INSERT INTO review (userId, name, review_text) VALUES ($1, $2, $3) RETURNING *";
+    const { rows } = await db.query(query, [userId, name, review_text]);
 
-    // Get the inserted review to return it (including the id)
-    const [newReview] = await db.execute("SELECT * FROM review WHERE id = ?", [
-      result.insertId,
-    ]);
-
-    res.status(201).json(newReview[0]);
+    res.status(201).json(rows[0]);
   } catch (error) {
     console.error("Database error:", error);
     res
@@ -37,14 +31,15 @@ export const addReview = async (req, res) => {
       .json({ message: "Error adding review", error: error.message });
   }
 };
+
 export const deleteReview = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const query = "DELETE FROM review WHERE id = ?";
-    const [result] = await db.execute(query, [id]);
+    const query = "DELETE FROM review WHERE id = $1 RETURNING *";
+    const { rows } = await db.query(query, [id]);
 
-    if (result.affectedRows === 0) {
+    if (rows.length === 0) {
       return res.status(404).json({ message: "Review not found" });
     }
 
@@ -53,6 +48,7 @@ export const deleteReview = async (req, res) => {
     res.status(500).json({ message: "Error deleting review", error });
   }
 };
+
 // Update a review
 export const updateReview = async (req, res) => {
   const { id } = req.params;
@@ -64,8 +60,8 @@ export const updateReview = async (req, res) => {
 
   try {
     // First check if the review exists and belongs to the user
-    const [existingReview] = await db.execute(
-      "SELECT * FROM review WHERE id = ?",
+    const { rows: existingReview } = await db.query(
+      "SELECT * FROM review WHERE id = $1",
       [id]
     );
 
@@ -73,26 +69,20 @@ export const updateReview = async (req, res) => {
       return res.status(404).json({ message: "Review not found" });
     }
 
-    if (existingReview[0].userId !== userId) {
+    if (existingReview[0].userid !== userId) {
       return res
         .status(403)
         .json({ message: "You can only edit your own reviews" });
     }
 
-    const query = "UPDATE review SET name = ?, review_text = ? WHERE id = ?";
-    const [result] = await db.execute(query, [name, review_text, id]);
+    const query = "UPDATE review SET name = $1, review_text = $2 WHERE id = $3 RETURNING *";
+    const { rows } = await db.query(query, [name, review_text, id]);
 
-    if (result.affectedRows === 0) {
+    if (rows.length === 0) {
       return res.status(404).json({ message: "Review not found" });
     }
 
-    // Get the updated review to return it
-    const [updatedReview] = await db.execute(
-      "SELECT * FROM review WHERE id = ?",
-      [id]
-    );
-
-    res.status(200).json(updatedReview[0]);
+    res.status(200).json(rows[0]);
   } catch (error) {
     console.error("Database error:", error);
     res

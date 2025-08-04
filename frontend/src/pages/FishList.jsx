@@ -391,7 +391,7 @@ const FishList = ({ limit }) => {
     const fetchFishDetails = async () => {
       try {
         const response = await fetch(
-          "http://localhost:4000/api/v1/fish/getall"
+        "http://localhost:4000/api/v1/fish/getall"
         );
         const data = await response.json();
         setFishList(data.data);
@@ -427,21 +427,29 @@ const FishList = ({ limit }) => {
 
     try {
       const user_id = user.uid;
+      console.log("Adding to cart:", { user_id, product_id: fish.id, category: "fish", quantity: 1 });
 
-      const response = await fetch("http://localhost:4000/api/v1/cart/add", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          user_id,
-          product_id: fish.id,
-          category: "fish",
-          quantity: 1,
-        }),
-      });
+      const response = await fetch(
+        "http://localhost:4000/api/v1/cart/add",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            user_id,
+            product_id: fish.id,
+            category: "fish",
+            quantity: 1,
+          }),
+        }
+      );
+
+      console.log("Response status:", response.status);
+      console.log("Response headers:", response.headers);
 
       const result = await response.json();
+      console.log("Response result:", result);
 
       if (response.ok) {
         Swal.fire({
@@ -452,13 +460,29 @@ const FishList = ({ limit }) => {
           background: "rgba(255, 255, 255, 0.95)",
         });
       } else {
-        throw new Error(result.error || "Failed to add to cart");
+        console.error("Server error response:", result);
+        throw new Error(result.error || `Server error: ${response.status}`);
       }
     } catch (error) {
       console.error("Cart Error:", error);
+      console.error("Error details:", {
+        message: error.message,
+        stack: error.stack,
+        name: error.name
+      });
+      
+      let errorMessage = "Failed to add item to cart";
+      if (error.message.includes("Failed to fetch")) {
+        errorMessage = "Network error: Please check your connection";
+      } else if (error.message.includes("Server error")) {
+        errorMessage = "Server error: Please try again later";
+      } else {
+        errorMessage = error.message;
+      }
+
       Swal.fire({
         title: "Error",
-        text: error.message,
+        text: errorMessage,
         icon: "error",
         confirmButtonColor: "#006699",
         background: "rgba(255, 255, 255, 0.95)",
@@ -527,7 +551,16 @@ const FishList = ({ limit }) => {
             </div>
             <div style={styles.content}>
               <h2 style={styles.fishName}>{fish.name}</h2>
-              <div style={styles.price}>৳{fish.price?.toFixed(2)}</div>
+              <div style={styles.price}>৳{(() => {
+                try {
+                  const price = fish.price;
+                  if (price === null || price === undefined) return "0.00";
+                  const numPrice = typeof price === "number" ? price : Number(price);
+                  return isNaN(numPrice) ? "0.00" : numPrice.toFixed(2);
+                } catch (error) {
+                  return "0.00";
+                }
+              })()}</div>
 
               <div style={styles.spec}>
                 <div style={styles.specItem}>
@@ -608,7 +641,16 @@ const FishList = ({ limit }) => {
               <div style={styles.modalHeaderContent}>
                 <h2 style={styles.modalTitle}>{selectedFish.name}</h2>
                 <div style={styles.modalPrice}>
-                  ৳{selectedFish.price?.toFixed(2)}
+                  ৳{(() => {
+                    try {
+                      const price = selectedFish.price;
+                      if (price === null || price === undefined) return "0.00";
+                      const numPrice = typeof price === "number" ? price : Number(price);
+                      return isNaN(numPrice) ? "0.00" : numPrice.toFixed(2);
+                    } catch (error) {
+                      return "0.00";
+                    }
+                  })()}
                 </div>
                 <p>
                   <strong>Species:</strong> {selectedFish.species}

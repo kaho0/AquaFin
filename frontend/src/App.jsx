@@ -21,7 +21,9 @@ import PlantList from "./pages/PlantList";
 import TrustedBlogs from "./pages/Blog";
 import ContactPage from "./pages/ContactUs";
 import AboutPage from "./pages/About";
-import AquariumCart from "./Cart";
+import Cart from "./Cart";
+import AdminPanel from "./pages/AdminPanel";
+
 // import About from "./pages/About";
 // import Contact from "./pages/Contact";
 
@@ -30,6 +32,7 @@ function App() {
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
+      console.log("App: Auth state changed", user ? `User: ${user.uid}` : "No user");
       setUser(user);
     });
 
@@ -53,20 +56,16 @@ function App() {
           path="/profile"
           element={user ? <Profile user={user} /> : <Navigate to="/login" />}
         />
-        <Route
-          path="/allfish"
-          element={user ? <FishList user={user} /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="/allplants"
-          element={user ? <PlantList user={user} /> : <Navigate to="/login" />}
-        />
+        <Route path="/allfish" element={<FishList />} />
+        <Route path="/allplants" element={<PlantList />} />
 
         {/* New routes */}
         <Route path="/blog" element={<TrustedBlogs user={user} />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />
-        <Route path="/cart" element={<AquariumCart />} />
+        <Route path="/admin" element={user ? <AdminPanel user={user} /> : <Navigate to="/login" />} />
+
+        <Route path="/cart" element={<Cart />} />
       </Routes>
     </Router>
   );
