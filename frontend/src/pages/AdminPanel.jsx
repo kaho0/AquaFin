@@ -47,10 +47,10 @@ function AdminPanel({ user }) {
     setLoading(true);
     try {
       const [ordersRes, fishesRes, plantsRes, analyticsRes] = await Promise.all([
-        fetch("http://localhost:4000/api/v1/admin/orders"),
-        fetch("http://localhost:4000/api/v1/admin/products/fish"),
-        fetch("http://localhost:4000/api/v1/admin/products/plant"),
-        fetch("http://localhost:4000/api/v1/admin/analytics"),
+        fetch("https://aquafin.onrender.com/api/v1/admin/orders"),
+        fetch("https://aquafin.onrender.com/api/v1/admin/products/fish"),
+        fetch("https://aquafin.onrender.com/api/v1/admin/products/plant"),
+        fetch("https://aquafin.onrender.com/api/v1/admin/analytics"),
       ]);
 
       const ordersData = await ordersRes.json();
@@ -72,7 +72,7 @@ function AdminPanel({ user }) {
 
   const updateOrderStatus = async (orderId, newStatus) => {
     try {
-      const response = await fetch(`http://localhost:4000/api/v1/admin/orders/${orderId}/status`, {
+      const response = await fetch(`https://aquafin.onrender.com/api/v1/admin/orders/${orderId}/status`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: newStatus }),
@@ -92,8 +92,8 @@ function AdminPanel({ user }) {
       const endpoint = productForm.category === "fish" ? "fish" : "plant";
       const method = editingProduct ? "PUT" : "POST";
       const url = editingProduct 
-        ? `http://localhost:4000/api/v1/admin/products/${endpoint}/${editingProduct.id}`
-        : `http://localhost:4000/api/v1/admin/products/${endpoint}`;
+        ? `https://aquafin.onrender.com/api/v1/admin/products/${endpoint}/${editingProduct.id}`
+        : `https://aquafin.onrender.com/api/v1/admin/products/${endpoint}`;
 
       const response = await fetch(url, {
         method,
@@ -125,7 +125,7 @@ function AdminPanel({ user }) {
 
     try {
       const endpoint = category === "fish" ? "fish" : "plant";
-      const response = await fetch(`http://localhost:4000/api/v1/admin/products/${endpoint}/${productId}`, {
+      const response = await fetch(`https://aquafin.onrender.com/api/v1/admin/products/${endpoint}/${productId}`, {
         method: "DELETE",
       });
 

@@ -80,7 +80,7 @@ function Profile({ user }) {
   const fetchCartItems = async (userId) => {
     try {
       const response = await fetch(
-      `http://localhost:4000/api/v1/cart/${userId}`
+      `https://aquafin.onrender.com/api/v1/cart/${userId}`
       );
       if (!response.ok) throw new Error("Failed to fetch cart items");
 
@@ -95,7 +95,7 @@ function Profile({ user }) {
   const fetchUserOrders = async (userId) => {
     try {
       const response = await fetch(
-      `http://localhost:4000/api/v1/orders/user/${userId}`
+      `https://aquafin.onrender.com/api/v1/orders/user/${userId}`
       );
       if (!response.ok) throw new Error("Failed to fetch user orders");
 
@@ -110,7 +110,7 @@ function Profile({ user }) {
   const removeItem = async (product_id, category) => {
     try {
       await fetch(
-      "http://localhost:4000/api/v1/cart/remove",
+      "https://aquafin.onrender.com/api/v1/cart/remove",
         {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
@@ -146,7 +146,7 @@ function Profile({ user }) {
       );
 
       const response = await fetch(
-      "http://localhost:4000/api/v1/cart/update",
+      "https://aquafin.onrender.com/api/v1/cart/update",
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -169,7 +169,7 @@ function Profile({ user }) {
   const clearCart = async () => {
     try {
       await fetch(
-      "http://localhost:4000/api/v1/cart/clear",
+      "https://aquafin.onrender.com/api/v1/cart/clear",
         {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
@@ -312,7 +312,7 @@ function Profile({ user }) {
 
       // 1. Save to SQL database via API endpoint
       const orderResponse = await fetch(
-      "http://localhost:4000/api/v1/orders/create",
+      "https://aquafin.onrender.com/api/v1/orders/create",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

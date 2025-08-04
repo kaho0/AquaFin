@@ -27,10 +27,10 @@ const Home = () => {
       try {
         const [fishResponse, plantResponse] = await Promise.all([
           fetch(
-        "http://localhost:4000/api/v1/fish/getall"
+        "https://aquafin.onrender.com/api/v1/fish/getall"
           ),
           fetch(
-        "http://localhost:4000/api/v1/plant/getall"
+        "https://aquafin.onrender.com/api/v1/plant/getall"
           ),
         ]);
 

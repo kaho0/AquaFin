@@ -27,7 +27,7 @@ function CartComponent() {
     try {
       setLoading(true);
       const response = await fetch(
-      `http://localhost:4000/api/v1/cart/${uid}`
+      `https://aquafin.onrender.com/api/v1/cart/${uid}`
       );
 
       if (!response.ok) throw new Error("Failed to fetch cart items");
@@ -53,7 +53,7 @@ function CartComponent() {
 
     try {
       const response = await fetch(
-      "http://localhost:4000/api/v1/cart/update",
+      "https://aquafin.onrender.com/api/v1/cart/update",
         {
           method: "PUT",
           headers: {
@@ -85,7 +85,7 @@ function CartComponent() {
   const removeFromCart = async (itemId) => {
     try {
       const response = await fetch(
-      "http://localhost:4000/api/v1/cart/remove",
+      "https://aquafin.onrender.com/api/v1/cart/remove",
         {
           method: "DELETE",
           headers: {
@@ -134,7 +134,7 @@ function CartComponent() {
       }).then(async (result) => {
         if (result.isConfirmed) {
           const response = await fetch(
-      "http://localhost:4000/api/v1/cart/clear",
+      "https://aquafin.onrender.com/api/v1/cart/clear",
             {
               method: "DELETE",
               headers: {

@@ -400,7 +400,7 @@ const PlantList = ({ limit }) => {
     const fetchPlantDetails = async () => {
       try {
         const response = await fetch(
-        "http://localhost:4000/api/v1/plant/getall"
+        "https://aquafin.onrender.com/api/v1/plant/getall"
         );
         const data = await response.json();
         if (Array.isArray(data.data)) {
@@ -443,7 +443,7 @@ const PlantList = ({ limit }) => {
       const user_id = user.uid;
 
       const response = await fetch(
-        "http://localhost:4000/api/v1/cart/add",
+        "https://aquafin.onrender.com/api/v1/cart/add",
         {
           method: "POST",
           headers: {

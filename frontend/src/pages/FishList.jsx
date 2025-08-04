@@ -391,7 +391,7 @@ const FishList = ({ limit }) => {
     const fetchFishDetails = async () => {
       try {
         const response = await fetch(
-        "http://localhost:4000/api/v1/fish/getall"
+        "https://aquafin.onrender.com/api/v1/fish/getall"
         );
         const data = await response.json();
         setFishList(data.data);
@@ -430,7 +430,7 @@ const FishList = ({ limit }) => {
       console.log("Adding to cart:", { user_id, product_id: fish.id, category: "fish", quantity: 1 });
 
       const response = await fetch(
-        "http://localhost:4000/api/v1/cart/add",
+        "https://aquafin.onrender.com/api/v1/cart/add",
         {
           method: "POST",
           headers: {

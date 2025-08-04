@@ -44,7 +44,7 @@ const Review = () => {
     setLoading(true);
     axios
       .get(
-        "http://localhost:4000/api/v1/reviews/getall"
+        "https://aquafin.onrender.com/api/v1/reviews/getall"
       )
       .then((response) => {
         // Sort reviews by date (newest first)
@@ -93,7 +93,7 @@ const Review = () => {
         }
 
         const response = await axios.put(
-        `http://localhost:4000/api/v1/reviews/${editReview.id}`,
+        `https://aquafin.onrender.com/api/v1/reviews/${editReview.id}`,
           reviewData
         );
 
@@ -104,7 +104,7 @@ const Review = () => {
         setIsEditing(false);
       } else {
         const response = await axios.post(
-        "http://localhost:4000/api/v1/reviews/create",
+        "https://aquafin.onrender.com/api/v1/reviews/create",
           reviewData
         );
 
@@ -163,7 +163,7 @@ const Review = () => {
 
       try {
         await axios.delete(
-        `http://localhost:4000/api/v1/reviews/${reviewId}`
+        `https://aquafin.onrender.com/api/v1/reviews/${reviewId}`
         );
         setReviews(reviews.filter((r) => r.id !== reviewId));
         setSuccess("Review deleted successfully!");

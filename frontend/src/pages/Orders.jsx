@@ -17,7 +17,7 @@ const Orders = () => {
         if (orderId) {
           // Fetch specific order details
           const response = await fetch(
-      `http://localhost:4000/api/v1/orders/${orderId}`
+      `https://aquafin.onrender.com/api/v1/orders/${orderId}`
           );
 
           if (!response.ok) {
