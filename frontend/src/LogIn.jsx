@@ -3,7 +3,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "./components/firebase.js";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
-import GoogleSignIn from "./components/GoogleSignIn";
+import SignInWithGoogle from "./components/SignInwithGoogle";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -60,7 +60,7 @@ const Login = () => {
           <FcGoogle size={24} style={{ marginRight: "10px" }} /> Sign in with
           Google
         </button> */}
-        <GoogleSignIn></GoogleSignIn>
+        <SignInWithGoogle></SignInWithGoogle>
         <p style={linkTextStyle}>
           Don&apos;t have an account?{" "}
           <Link to="/register" style={linkStyle}>
