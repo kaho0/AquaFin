@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import {
@@ -32,7 +32,10 @@ function App() {
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
-      console.log("App: Auth state changed", user ? `User: ${user.uid}` : "No user");
+      console.log(
+        "App: Auth state changed",
+        user ? `User: ${user.uid}` : "No user"
+      );
       setUser(user);
     });
 
@@ -63,7 +66,10 @@ function App() {
         <Route path="/blog" element={<TrustedBlogs user={user} />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />
-        <Route path="/admin" element={user ? <AdminPanel user={user} /> : <Navigate to="/login" />} />
+        <Route
+          path="/admin"
+          element={user ? <AdminPanel user={user} /> : <Navigate to="/login" />}
+        />
 
         <Route path="/cart" element={<Cart />} />
       </Routes>
