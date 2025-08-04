@@ -57,7 +57,7 @@ const NavBar = () => {
       </div>
 
       {/* Admin Panel Link (visible only to admin) */}
-      {user && user.email === "kahonbintezaman@gmail.com" && (
+      {user && (user.email === "kahonbintezaman@gmail.com" || user.email === "zamanibna2005@gmail.com") && (
         <button
           className="text-white bg-teal-700 px-4 py-2 rounded-lg font-semibold hover:bg-teal-800 transition-colors mr-4"
           onClick={() => navigate("/admin")}

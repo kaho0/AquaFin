@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FiBarChart2, FiPackage, FiDollarSign, FiZap } from "react-icons/fi";
 
-const ADMIN_EMAIL = "kahonbintezaman@gmail.com";
+const ADMIN_EMAILS = ["kahonbintezaman@gmail.com", "zamanibna2005@gmail.com"];
 
 function AdminPanel({ user }) {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -39,7 +39,7 @@ function AdminPanel({ user }) {
   });
 
   useEffect(() => {
-    if (!user || user.email !== ADMIN_EMAIL) return;
+    if (!user || !ADMIN_EMAILS.includes(user.email)) return;
     fetchAllData();
   }, [user]);
 
@@ -158,7 +158,7 @@ function AdminPanel({ user }) {
     a.click();
   };
 
-  if (!user || user.email !== ADMIN_EMAIL) {
+  if (!user || !ADMIN_EMAILS.includes(user.email)) {
     return <div className="p-8 text-center text-red-600 font-bold">Access denied. Admins only.</div>;
   }
 
