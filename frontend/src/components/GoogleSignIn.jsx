@@ -6,7 +6,7 @@ import { setDoc, doc } from "firebase/firestore";
 import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
 
-function SignInWithGoogle() {
+function GoogleSignIn() {
   const navigate = useNavigate();
   
   function googleLogin() {
@@ -57,4 +57,4 @@ function SignInWithGoogle() {
   );
 }
 
-export default SignInWithGoogle;
+export default GoogleSignIn; 
