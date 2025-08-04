@@ -3,7 +3,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "./components/firebase.js";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
-import SignInWithGoogle from "./components/SignInwithGoogle";
+import SignInWithGoogle from "./components/SignInWithGoogle";
 
 const Login = () => {
   const [email, setEmail] = useState("");
