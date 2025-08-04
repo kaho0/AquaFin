@@ -50,9 +50,9 @@ const NavBar = () => {
       {/* Logo */}
       <div className="text-white text-2xl font-bold flex items-center gap-4 ml-4">
         <img
-          src="/white.png"
+          src="/loogo.png"
           alt="Logo"
-          className="h-auto w-auto max-h-30 max-w-30 object-contain"
+          className="h-auto w-auto max-h-40 max-w-40 object-contain"
         />
       </div>
 

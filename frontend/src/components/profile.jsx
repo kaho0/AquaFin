@@ -436,7 +436,7 @@ function Profile({ user }) {
             {/* Cart Section */}
             <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition duration-300 mb-8">
               <h2 className="p-4 m-0 text-xl border-b border-blue-100 text-teal-700 text-center bg-gradient-to-r from-teal-100 to-emerald-100 md:text-2xl md:p-5 font-bold">
-                <FiZap className="inline-block mr-2 text-teal-600" />
+                <img src="/loogo.png" alt="Aquarium" className="inline-block mr-2 w-8 h-8 object-contain" />
                 Your Aquarium Collection
               </h2>
 
@@ -691,7 +691,7 @@ function Profile({ user }) {
                 </>
               ) : (
                 <p className="py-10 px-5 text-center text-teal-600 text-base">
-                  <FiZap className="block text-5xl mb-4 mx-auto text-teal-600" />
+                  <img src="/loogo.png" alt="Empty Cart" className="block w-24 h-24 mb-4 mx-auto object-contain" />
                   Your aquarium is empty. Add some beautiful fish to your
                   collection!
                 </p>
@@ -701,7 +701,7 @@ function Profile({ user }) {
             {/* Orders Section */}
             <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition duration-300 mb-8">
               <h2 className="p-4 m-0 text-xl border-b border-blue-100 text-teal-700 text-center bg-gradient-to-r from-teal-100 to-emerald-100 md:text-2xl md:p-5 font-bold">
-                <FiPackage className="inline-block mr-2 text-teal-600" />
+                <img src="/loogo.png" alt="Orders" className="inline-block mr-2 w-8 h-8 object-contain" />
                 Your Orders
               </h2>
 

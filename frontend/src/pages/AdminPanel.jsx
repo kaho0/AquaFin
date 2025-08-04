@@ -175,16 +175,16 @@ function AdminPanel({ user }) {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 font-['Poppins']">
       {/* Modern Header with Aqua Theme */}
       <div className="bg-gradient-to-r from-teal-600 to-cyan-600 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-8">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
-                <FiZap className="text-2xl text-white" />
-              </div>
-              <h1 className="text-3xl font-bold text-white">AquaFin Admin Dashboard</h1>
+                          <div className="flex items-center space-x-3">
+                <div className="w-32 h-32 bg-opacity-20 rounded-lg flex items-center justify-center">
+                  <img src="/loogo.png" alt="AquaFin Logo" className="w-28 h-28 object-contain" />
+                </div>
+              <h1 className="text-3xl font-bold text-white">Admin Dashboard</h1>
             </div>
             <div className="flex space-x-3">
               <button
@@ -239,7 +239,7 @@ function AdminPanel({ user }) {
                     <p className="text-sm text-teal-500 mt-2">All time orders</p>
                   </div>
                   <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center">
-                    <FiPackage className="text-2xl text-teal-600" />
+                    <img src="/loogo.png" alt="Orders" className="w-10 h-10 object-contain" />
                   </div>
                 </div>
               </div>
@@ -252,7 +252,7 @@ function AdminPanel({ user }) {
                     <p className="text-sm text-emerald-500 mt-2">Revenue generated</p>
                   </div>
                   <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center">
-                    <FiDollarSign className="text-2xl text-emerald-600" />
+                    <img src="/loogo.png" alt="Sales" className="w-10 h-10 object-contain" />
                   </div>
                 </div>
               </div>
@@ -265,7 +265,7 @@ function AdminPanel({ user }) {
                     <p className="text-sm text-blue-500 mt-2">Fish & Plants</p>
                   </div>
                   <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
-                    <FiZap className="text-2xl text-blue-600" />
+                    <img src="/loogo.png" alt="Products" className="w-10 h-10 object-contain" />
                   </div>
                 </div>
               </div>
